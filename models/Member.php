@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\data\ArrayDataProvider;
 
 /**
  * This is the model class for table "member".
@@ -69,7 +70,29 @@ class Member extends \yii\db\ActiveRecord
 
     public function results()
     {
-        $new = new  Member();
-       
+        
+        $ch = curl_init(); 
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost/bmi/web/member/list'); 
+        curl_setopt($ch, CURLOPT_POST, 1 ); 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+        $postResult = curl_exec($ch);
+       $list = json_decode($postResult)->data;
+        curl_close($ch);
+        
+        // print_r($list);exit;
+
+        $data =  new ArrayDataProvider(
+            [
+                'allModels' => $list,
+            ]
+        );
+
+        // print_r($data);exit;
+
+        return $data;
+        
     }
+    
 }

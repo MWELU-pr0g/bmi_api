@@ -12,7 +12,12 @@ class MemberController extends \yii\rest\Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new Member();
+        $data=$model->results();
+
+    //    print_r($data);exit;
+        return $this->render('index',
+    ['model'=>$data]);
     }
     public function actionNew()
     {
@@ -29,6 +34,8 @@ class MemberController extends \yii\rest\Controller
         $new->weight = \Yii::$app->request->post('weight');
         $height = $new->height;
         $weight = $new->weight;
+
+        // var_dump($height);die();
 
         $bmi = $weight / ($height * $height);
 
@@ -65,7 +72,7 @@ class MemberController extends \yii\rest\Controller
         // exit;
 
         \Yii::$app->response->format = \Yii\web\Response::FORMAT_JSON;
-
+        
 
         $new = Member::find()->all();
 
